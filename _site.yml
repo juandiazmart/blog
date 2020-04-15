@@ -1,7 +1,7 @@
-name: "Blog"
-title: "My Blog"
+name: "blog-JPD"
+title: "Blog de Juan Pablo Diaz Martinez"
 description: |
-  My Blog
+  Este blog contiene diferentes aplicaciones estadisticas en salud.
 output_dir: "docs"
 navbar:
   right:

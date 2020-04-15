@@ -49,3 +49,4 @@ _posts/*/*_cache/
 _posts/*/*_files/
 _posts/*/*.html
 *_cache/
+.Rproj.user
