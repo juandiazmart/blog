@@ -1,17 +1,22 @@
 [
   {
-    "path": "posts/welcome/",
-    "title": "Welcome to My Blog",
-    "description": "Welcome to our new blog, My Blog. We hope you enjoy \nreading what we have to say!",
+    "path": "posts/2020-04-15-mexico-covid/",
+    "title": "Ociosidad en tiempos de COVID-19 (2019-nCoV)",
+    "description": "Algunos comentarios de lo que pasa en México con respecto a esta enfermedad.",
     "author": [
       {
-        "name": "Nora Jones",
-        "url": "https://example.com/norajones"
+        "name": "Juan Pablo Díaz-Martínez",
+        "url": {}
       }
     ],
     "date": "2020-04-15",
-    "categories": [],
-    "preview": {},
-    "last_modified": "2020-04-15T18:28:47-04:00"
+    "categories": [
+      "R",
+      "COVID-19"
+    ],
+    "preview": "posts/2020-04-15-mexico-covid/mexico-covid_files/figure-html5/acum_casos-1.png",
+    "last_modified": "2020-04-15T18:47:23-04:00",
+    "preview_width": 1920,
+    "preview_height": 1536
   }
 ]
