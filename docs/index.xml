@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title>Blog de Juan Pablo Diaz Martinez</title>
+    <link>https://juandiazmart.github.io/blog/</link>
+    <atom:link href="https://juandiazmart.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
+    <description>Este blog contiene diferentes aplicaciones estadísticas en salud.</description>
+    <generator>Distill</generator>
+    <lastBuildDate>Wed, 15 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Ociosidad en tiempos de COVID-19 (2019-nCoV)</title>
+      <dc:creator>Juan Pablo Díaz-Martínez</dc:creator>
+      <link>https://juandiazmart.github.io/blog/posts/2020-04-15-mexico-covid</link>
+      <description>Algunos comentarios de lo que pasa en México con respecto a esta enfermedad.</description>
+      <guid>https://juandiazmart.github.io/blog/posts/2020-04-15-mexico-covid</guid>
+      <pubDate>Wed, 15 Apr 2020 00:00:00 +0000</pubDate>
+      <media:content url="https://juandiazmart.github.io/blog/posts/2020-04-15-mexico-covid/mexico-covid_files/figure-html5/acum_casos-1.png" medium="image" type="image/png" width="1920" height="1536"/>
+    </item>
+  </channel>
+</rss>
