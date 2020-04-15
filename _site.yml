@@ -13,7 +13,7 @@ collections:
     share: [twitter, facebook]
     subscribe: _subscribe.html
 navbar:
-  logo: assets/TimC.jpg
+  logo: images/jpd.png
   right:
     - text: "Home"
       href: index.html
