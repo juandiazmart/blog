@@ -1,5 +1,5 @@
 ---
-title: "My blog"
+title: "Blog de Juan Pablo Diaz Martinez"
 site: distill::distill_website
 listing: posts
 ---

@@ -5,7 +5,7 @@ author:
   affiliation_url: https://thebru.ca/Juan_Pablo_Diaz_Martinez
   name: Juan Pablo Díaz-Martínez
 date: "`r Sys.Date()`"
-base_url: https://juandiazmart.github.io/blog/
+base_url: https://juandiazmart.github.io/
 description: Algunos comentarios de lo que pasa en México con respecto a esta enfermedad.
 slug: COVID19Mexico
 creative_commons: CC BY-SA
