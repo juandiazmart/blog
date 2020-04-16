@@ -7,8 +7,7 @@ library(tidyverse)
 library(countrycode)
 library(bayesplot)
 
-setwd("~/JPD/blog")
-
+setwd("~/JPD/juandiazmart.github.io/blog/_posts/2020-04-15-mexico-covid")
 
 muertes_mx <- 
   read_csv("https://raw.githubusercontent.com/mariorz/covid19-mx-time-series/master/data/covid19_deaths_mx.csv") %>% 
@@ -183,4 +182,4 @@ estimated.deaths.cf = out$E_deaths0
 
 save.image(paste0('results/',"base",'-',Sys.Date(),'.Rdata'))
 
-save(fit,prediction,dates,reported_cases,deaths_by_country,countries,estimated.deaths,estimated.deaths.cf,out,covariates,file=paste0('results/',"base",'-',Sys.Date(),'-stanfit.Rdata'))
+save(fit,prediction,dates,reported_cases,deaths_by_country,estimated.deaths,estimated.deaths.cf,out,covariates,file=paste0('results/',"base",'-',Sys.Date(),'-stanfit.Rdata'))

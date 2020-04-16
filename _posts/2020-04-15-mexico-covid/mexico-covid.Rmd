@@ -217,8 +217,8 @@ un_dates <- unique(covariates_country_long$value)
   levels(data_cases$key) <- c("ninetyfive", "fifty")
   
   p1 <- ggplot(data_country) +
-    geom_bar(data = data_country, aes(x = time, y = reported_cases_c), 
-             fill = "coral4", stat='identity', alpha=0.5) + 
+    geom_bar(data = data_country, aes(x = time, y = reported_cases_c,fill = "Observados"), 
+            stat='identity', alpha=0.5) + 
     geom_ribbon(data = data_cases_95, 
                 aes(x = time, ymin = cases_min, ymax = cases_max, fill = key)) +
     geom_line(aes(x=time,y=predicted_cases_c,color="Predicción"))+
@@ -226,8 +226,8 @@ un_dates <- unique(covariates_country_long$value)
     ylab("Número acumulado de casos confirmados") +
     scale_y_continuous(labels = scales::comma_format(accuracy = 1),n.breaks = 10)+
     scale_x_date(date_breaks = "3 days", labels = date_format("%e %b")) + 
-    scale_fill_manual(name = "", labels = c("95% CrI"),
-                      values = c(alpha("deepskyblue4", 0.35))) + 
+    scale_fill_manual(name = "", labels = c("Observados","95% CrI"),
+                      values = c(alpha("deepskyblue4", 0.35),alpha("coral3", 0.5))) + 
     scale_color_manual(name = "",
                       values ="black") + 
     theme(axis.text.x = element_text(angle = 45, hjust = 1),legend.position="bottom") + 
@@ -363,6 +363,12 @@ un_dates <- unique(covariates_country_long$value)
   
   confirmados<-as.numeric(mexico %>% filter(iso3c=="MEX") %>% summarise(max=max(confirmed)))
   muertes<-as.numeric(mexico %>% filter(iso3c=="MEX") %>% summarise(max=max(deaths)))
+  
+  muertes_cf<-as.numeric(data_country_cf %>% filter(time==Sys.Date()) %>% select(estimated_deaths_cf,death_min_cf,death_max_cf))
+  muertes_pred<-as.numeric(data_country_forecast %>% filter(time==Sys.Date()) %>% select(estimated_deaths_forecast,death_min_forecast,death_max_forecast))
+  muertes_evitadas<-muertes_cf-muertes_pred
+  
+  
 ```
 # Resumen ejecutivo
 
@@ -608,7 +614,8 @@ p3+labs(caption = "Juan Pablo Díaz @juandiazmart / Data: https://github.com/mar
          axis.line = element_line(colour = "grey50", size = .9))
 ```
 
-Una de las ventajas de este modelo es que nos permite hacer predicciones del número acumulado de muertes, utilizando $R_t$ estimado en `r format(max(data_covid$date), "%b %e")` y su contrafactual^[Lo que pudo haber ocurrido] ($R_t$ al inicio de la epidemia en nuestro país);estas predicciones se muestran en la Figura XX. Con estos resultados es posible estimar cuantas muertes se han evitado hasta el día de hoy, lo anterior se obtiene al calcular la diferencia entre ambas predicciones (region azul menos región roja de la Fiugra XX.). Gracias a las medidas de mitigación se han podido evitar `r formatC(head(data_country[,"rt"],1), format="f", big.mark=",", digits=1)` muertes (95% CrI: `r paste(formatC(head(data_country[,"rt_min"],1), format="f", big.mark=",", digits=1),"-",formatC(head(data_country[,"rt_max"],1), format="f", big.mark=",", digits=1))`)
+Una de las ventajas de este modelo es que nos permite hacer predicciones del número acumulado de muertes, utilizando $R_t$ estimado en `r format(max(data_covid$date), "%b %e")` y su contrafactual^[Lo que pudo haber ocurrido] ($R_t$ al inicio de la epidemia en nuestro país);estas predicciones se muestran en la Figura XX. Con estos resultados es posible estimar cuantas muertes se han evitado hasta el día de hoy, lo anterior se obtiene al calcular la diferencia entre ambas predicciones (region azul menos región roja de la Fiugra XX en`r format(max(data_covid$date), "%b %e")`). Gracias a las medidas de mitigación se han podido evitar 
+ `r formatC(muertes_evitadas[1], format="f", big.mark=",", digits=0)` (95% CrI: `r paste(formatC(muertes_evitadas[2], format="f", big.mark=",", digits=0),"-",formatC(muertes_evitadas[3], format="f", big.mark=",", digits=0))`) muertes.
 
 ```{r message=FALSE, warning=FALSE, tidy=TRUE,fig.width=10, fig.height=8,fig.cap= "Número acumulado de muertes por COVID-19, observados y predichos"}
 p2<-p2+labs(caption = "Juan Pablo Díaz @juandiazmart / Data: https://github.com/mariorz.",
