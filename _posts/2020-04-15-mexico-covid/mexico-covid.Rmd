@@ -220,14 +220,14 @@ un_dates <- unique(covariates_country_long$value)
     geom_bar(data = data_country, aes(x = time, y = reported_cases_c,fill = "Observados"), 
             stat='identity', alpha=0.5) + 
     geom_ribbon(data = data_cases_95, 
-                aes(x = time, ymin = cases_min, ymax = cases_max, fill = key)) +
+                aes(x = time, ymin = cases_min, ymax = cases_max, fill = "95% CrI")) +
     geom_line(aes(x=time,y=predicted_cases_c,color="Predicción"))+
     xlab("") +
     ylab("Número acumulado de casos confirmados") +
     scale_y_continuous(labels = scales::comma_format(accuracy = 1),n.breaks = 10)+
     scale_x_date(date_breaks = "3 days", labels = date_format("%e %b")) + 
     scale_fill_manual(name = "", labels = c("Observados","95% CrI"),
-                      values = c(alpha("deepskyblue4", 0.35),alpha("coral3", 0.5))) + 
+                      values = c(alpha("deepskyblue4", 0.35),alpha("coral4", 0.5))) + 
     scale_color_manual(name = "",
                       values ="black") + 
     theme(axis.text.x = element_text(angle = 45, hjust = 1),legend.position="bottom") + 
@@ -303,13 +303,13 @@ un_dates <- unique(covariates_country_long$value)
                 fill = "red", alpha=0.35)+
     geom_vline(xintercept = data_deaths$time[length(data_deaths$time)], 
                col = "black", linetype = "dashed", alpha = 0.5) + 
+    scale_y_continuous(labels = scales::comma_format(accuracy = 1),n.breaks = 10,trans = "log10")+
     #scale_fill_manual(name = "", 
     #                 labels = c("Confirmed deaths", "Predicted deaths"),
     #                 values = c("coral4", "deepskyblue4")) + 
     xlab("") +
     ylab("Número acumulado de muertos (log10)") + 
-    scale_x_date(date_breaks = "3 days", labels = date_format("%e %b")) + 
-    scale_y_continuous(trans='log10', labels=comma) + 
+    scale_x_date(date_breaks = "3 days", labels = date_format("%e %b"))  + 
     coord_cartesian(ylim = c(1, 100000), expand = FALSE) + 
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
     guides(fill=guide_legend(ncol=1, reverse = TRUE))
@@ -346,7 +346,7 @@ un_dates <- unique(covariates_country_long$value)
                                                    y = x, 
                                                    group = key, 
                                                    shape = key, 
-                                                   col = key), size = 3) +
+                                                   col = key), size = 4) +
     xlab("") +
     scale_y_continuous(n.breaks = 10)+
     ylab("Número efectivo de reproducción") +
@@ -376,12 +376,12 @@ Los [coronavirus](https://coronavirus.gob.mx/informacion-accesible/) son una fam
 
 Debido a la importancia de lo anterior, decidí escribir este post con los siguientes objetivos:
 
-1. Resumir la situación de la epidemia por COVID-19 en nuestro país, tomando en cuenta el funcionamiento del sistema de vigilancia epidemiológico en nuestro país
+1. Resumir la situación de la epidemia por COVID-19 en nuestro país, tomando en cuenta el funcionamiento del sistema de vigilancia epidemiológico en nuestro país.
 2. Estimar el impacto que han tenido las diferentes medidas de mitigación realizadas por el gobierno federal a través de las muertes observadas por COVID-19 en nuestro país mediante un modelo jerárquico bayesiano propuesto [aquí](https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/covid-19/report-13-europe-npi-impact/): Este modelo también estimó que tan rápido se infectan las personas (número efectivo de reproducción) y el total de pacientes infectados con SARS-COV2 a través del tiempo. Dado que el modelo estima el efecto que han tenido las medidas decretadas por el gobierno federal, fue posible predecir el número de muertes acumuladas que pueden ocurrir en los siguientes 7 días. 
 
 Los resultados son los siguientes: el `r percent(tail(data_country[,"predicted_cases_c"],1)/pop)` (95% CrI: `r paste(percent(tail(data_country[,"predicted_min_c"],1)/pop),"-",percent(tail(data_country[,"predicted_max_c"],1)/pop))`) de la población en nuestro país se encuentra infectada con SARS-COV2 hasta `r format(max(data_covid$date), "%b %e")`. Desde que se exhortó al distanciamiento social mediante la campaña "Susana Distancia", el número de reprodución efectivo esperado fue de `r formatC(tail(data_country[,"rt"],1), format="f", big.mark=",", digits=1)` (95% CrI: `r paste(formatC(tail(data_country[,"rt_min"],1), format="f", big.mark=",", digits=1),"-",formatC(tail(data_country[,"rt_max"],1), format="f", big.mark=",", digits=1))`), lo que implica que una persona infecta a `r formatC(tail(data_country[,"rt"],1), format="f", big.mark=",", digits=1)` personas. 
 
-De acuerdo a los resultados, el número acumulado de muertes seguirá incrementando en los próximos 7 días. Si bien se observó que "Susana Distancia" ha logrado reducir el número de muertes, no se ha logrado disminuir lo suficiente el número efectivo de reproducción^[Lo ideal es que éste se encuentre debajo de uno]. Estas esimaciones son de gran utilidad ya que podrán servir para por ejemlo, realizar estimaciones del uso de recursos, especial el número de ventiladores que se necesitarán en los siguientes meses.
+De acuerdo a los resultados, el número acumulado de muertes seguirá incrementando en los próximos 7 días. Si bien se observó que "Susana Distancia" ha logrado reducir el número de muertes, estas medida de mitigación no ha logrado disminuir lo suficiente el número efectivo de reproducción^[Lo ideal es que éste se encuentre debajo de uno]. Estas estimaciones son de gran utilidad ya que podrán servir para poder realizar estimaciones del uso de recursos por tratar COVID-19, especialmente sería de gran interés poder conocer si el número de ventiladores serán suficientes en los siguientes meses.
 
 ## Introducción
 
@@ -392,15 +392,17 @@ Este post tiene como objetivo discutir algunos aspectos importantes de la epidem
 
 # Epidemia en México
 
-Mucho se ha hablado en las conferencias vespertinas relacionadas a COVID-19 acerca del número de casos nuevos desde que la epidemia llegó a nuestro país y si el gobierno ha hecho pruebas suficientes. Antes de describir de cualquier análisis es importante describir dos aspectos importrantes respecto a las características epidemiológicas en nuestro país:
-1. Cómo funciona el sistema epidemiológico
-2. Cómo se alimenta diariamente el número de casos confirmados 
+Mucho se ha hablado en las conferencias vespertinas relacionadas a COVID-19 acerca del número de casos nuevos desde que la epidemia llegó a nuestro país y si el gobierno ha hecho pruebas suficientes. Antes de cualquer análisis de la epidemia en México creo que es importante describir algunos aspectos importantes de ésta, como por ejemplo:
+1. Cómo funciona el sistema epidemiológico en nuestro país.
+2. Cómo se alimenta diariamente el número de casos confirmados.
 
 ## Sistema epidemiológico en México
 
-El Dr. Hugo López Gatell ha mencionada en muchísimas ocasiones como funciona el sistema centinela en nuestro país (la siguiente [entrevista](https://elpais.com/sociedad/2020-03-26/lopez-gatell-en-mexico-queremos-un-balance-entre-proteger-la-salud-y-a-las-economias-mas-debilitadas.html) es muestra de lo anterior). A manera de resumen, la idea del programa es que “en vez de recopilar grandes cantidades de datos de calidad deficiente, hay que concentrarse en recopilar datos de buena calidad de un número reducido de centros centinela seleccionados cuidadosamente”, de acuerdo al documento de la [OMS](https://www.paho.org/revelac-i/wp-content/uploads/2015/10/2015-cha-guia-operativa-vigilancia-centinela-irag.pdf) actualizado en 2014. El proceso es buscar COVID-19 en pacientes negativos a la prueba de influenza para ver si hay transmisión comunitaria; Alberto Díaz Cayeros hace una descripción de éste y discute posibles fallas que pueden ocurrir en este [sistema](https://medium.com/@adiazcayeros/the-balancing-act-in-mexicos-covid-19-response-a6955ec629fc).
+El Dr. Hugo López Gatell ha mencionado en reiteradas ocasiones como funciona el sistema centinela en nuestro país (la siguiente [entrevista](https://elpais.com/sociedad/2020-03-26/lopez-gatell-en-mexico-queremos-un-balance-entre-proteger-la-salud-y-a-las-economias-mas-debilitadas.html) es muestra de lo anterior). A manera de resumen, la idea del programa es que “en vez de recopilar grandes cantidades de datos de calidad deficiente, hay que concentrarse en recopilar datos de buena calidad de un número reducido de centros centinela seleccionados cuidadosamente”, de acuerdo al documento de la [OMS](https://www.paho.org/revelac-i/wp-content/uploads/2015/10/2015-cha-guia-operativa-vigilancia-centinela-irag.pdf) actualizado en 2014. El proceso es buscar COVID-19 en pacientes negativos a la prueba de influenza para ver si hay transmisión comunitaria; Alberto Díaz Cayeros hace una descripción de éste y discute posibles fallas que pueden ocurrir al utilizar este [sistema](https://medium.com/@adiazcayeros/the-balancing-act-in-mexicos-covid-19-response-a6955ec629fc).
 
-Este sistema funcionó para H1N1 en el 2009 y todos esperamos que funcione para COVID-19. ¿Por qué utilizar este sistema y no pruebas masivas como lo hizo Corea del Sur? Creo que es por dos razones: el sistema ha funcionado y es eficiente debido las limitaciones de recursos en Salud en nuestro país. Es importante aclarar que estas limitaciones no son nuevas y es producto de un porcentaje muy bajo del gasto en el sector salud como porcentaje del PIB durante varios años de acuerdo a la [OCDE](https://stats.oecd.org/).
+La vigilancia centinela no es nueva en nuestro país ya que éste fue utlizado para H1N1 en el 2009. ¿Por qué utilizar este sistema y no pruebas masivas como lo hizo Corea del Sur? Creo que es por dos razones: el sistema ha funcionado (H1N1) y es eficiente debido las limitaciones de recursos en salud en nuestro país. Es importante aclarar que estas limitaciones no son nuevas y es producto de un porcentaje muy bajo del gasto en el sector salud como porcentaje del PIB durante varios años de acuerdo a la [OCDE](https://stats.oecd.org/).
+
+
 
 ## Casos confirmados
 
@@ -411,6 +413,9 @@ El 28 de febrero fue confirmado el primer paciente con COVID-19 en nuestro país
 * Caso confirmado - Persona que cumpla lo anterior y que cuente con confirmación del InDRE.
 
 Asimismo, se modificó el porcentaje de muestreo para vigilar los casos de COVID-19. Solo se realizará la prueba al 10% de los casos sospechosos sin síntomas o síntomas leves. A su vez, se realizará la prueba al 100% de los casos sospechosos con sintomología grave o que cumplan con la definición infección respiratoria aguda grave (IRAG). Es importante recalcar que el gobierno ha recalcado que **todos los casos sospechosos sin importar si se les realizó la prueba deberán de permanecer en aislamiento **.
+
+Hace aproximadamente una semana el Dr. López Gatell mencionó que habían hasta **26 mil** [**casos**](https://lopezdoriga.com/nacional/lopez-gatell-estima-en-26-mil-519-los-casos-de-covid-19-en-mexico/) en nuestro país. Esta estimación se logró gracias a la vigilancia centinela ya que este sistema representa una muestra del total de unidades de salud en nuestro país^[El muestreo estadístico se encarga de seleccionar metodológicamente una muestra para poder hacer estimaciones a nivel poblacional.]
+
 # Análisis de la epidemia en México
 Antes de presentar datos y gráficas me gustaría enfatizar en **2 aspectos importantes al considerar la presentación y análisis de datos de casos confirmados con COVID-19**:
 
@@ -419,7 +424,7 @@ Antes de presentar datos y gráficas me gustaría enfatizar en **2 aspectos impo
 
 ¿Qué sí podemos rescatar cuando comparamos casos confirmados entre diferentes países?. La siguiente gráfica muestra el número de casos confirmados acumulados con COVID-19 desde que se comfirmó el paciente número 100. Decidí transformar el eje de las $y$ al aplicarle el logaritmo base 2; esta transformación ayuda a una mejor interpretación de los datos ya que es más fácil para el lector ver cuanto tiempo se tarda un país en tener el doble de casos confirmados en un periodo determinado de tiempo. Asimismo al transformar los datos la serie de tiempo presenta un comportamiento más lneal.
 
-```{r acum_casos, message=FALSE, warning=FALSE, tidy=TRUE,fig.width=10, fig.height=8}
+```{r acum_casos, message=FALSE, warning=FALSE, tidy=TRUE,fig.width=12, fig.height=8}
  data_covid  %>% filter(iso3c %in% countries) %>%
    group_by(iso3c,date) %>% summarise_at(vars(-Province_Re),funs(sum)) %>%
   filter(confirmed > 99) %>%
@@ -462,7 +467,7 @@ México desde que llegó el caso número 100 ha tenido un incremento al doble de
 
 Dado que es difícil comparar casos confirmados por todo lo explicado en párrafos previos, pienso que es más fácil comparar el número de muertes^[Recordemos que a todos los graves sí se les realiza la prueba]. La siguiente gráfica nos ayuda a entender el comportamiento de número de muertes acumuladas en nuestro país desde que se presentó la quinta muerta.
 
-```{r acum_muerte, message=FALSE, warning=FALSE, tidy=TRUE,fig.width=10, fig.height=8}
+```{r acum_muerte, message=FALSE, warning=FALSE, tidy=TRUE,fig.width=12, fig.height=8}
  data_covid %>% filter(iso3c %in% countries) %>% 
    group_by(iso3c,date) %>%
    summarise_at(vars(-Province_Re),funs(sum)) %>% filter(deaths > 4) %>%
@@ -533,7 +538,7 @@ donde $\phi$ tiene una distribución normal truncada. El número esperado de mue
 
 El modelo asume (basado en [evidencia](https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(20)30243-7/fulltext) previa) que $\pi$ es una suma de dos tiempos independientes: el tiempo de incubación(tiempo entre infección y sintomas) y el tiempo entre síntomas y muerte. Claramente estos tiempos son aleatorios y por lo tanto se les asigna una distribución de probabilidad (Gamma^[Parametrizada con la media de la distribución y su coeficiente de variación]). Por lo tanto $\pi$ está dado por:
 
-$$\phi\sim ifr((Gamma(5.1,0.86)+Gamma(18.8,0.45))$$
+$$\phi\sim ifr*((Gamma(5.1,0.86)+Gamma(18.8,0.45))$$
 Ahora que ya sabemos que $\pi$ representa la distribución entre el tiempo de infección y muerte ajustada por la tasa de mortalidad por infección, se puede relacionar el número esperado de muertes en un determinado día $d_t$ con $pi$ de la siguiente manera:
 
 $$d_t=\sum_{\tau=0}^{t-1} c_t\pi_{t-\tau}$$
@@ -566,7 +571,7 @@ Para falicitar la estimación de $R_t$, se utiliza una función por partes que m
 
 $$R_t=R_0exp(-\sum_{k=1}^{4}\alpha_{k}I_{k,t})$$
 
-donde I es una variable indicadora donde toma el valor de 1 y la intervención $k$ es implementada $k=1,...,4$ y 0 si no. Asimsmo:
+donde I es una variable indicadora donde toma el valor de 1 si la intervención $k$ es implementada $k=1,...,4$ y 0 si no. Asimsmo:
 
 $$\alpha_{k}\sim Gamma(.5,1)$$
 La distribución de $R_0$ fue asumida con base en la evidencia [previa](https://www.ncbi.nlm.nih.gov/pubmed/32097725):
@@ -580,7 +585,7 @@ El modelo estima que para `r format(max(data_covid$date), "%b %e")`, el número 
 
 Al inicio de la epidemia en México, el número efectivo de reproducción $R_t$ era de `r formatC(head(data_country[,"rt"],1), format="f", big.mark=",", digits=1)` (95% CrI: `r paste(formatC(head(data_country[,"rt_min"],1), format="f", big.mark=",", digits=1),"-",formatC(head(data_country[,"rt_max"],1), format="f", big.mark=",", digits=1))`). Después de que el gobierno implementó "Susana Distancia" el 23 de Marzo, éste descendió a `r formatC(tail(data_country[,"rt"],1), format="f", big.mark=",", digits=1)` (95% CrI: `r paste(formatC(tail(data_country[,"rt_min"],1), format="f", big.mark=",", digits=1),"-",formatC(tail(data_country[,"rt_max"],1), format="f", big.mark=",", digits=1))`)
 
-```{r message=FALSE, warning=FALSE, tidy=TRUE,fig.width=10, fig.height=8,fig.cap="Número acumulado de confirmados por COVID-19, observados y predichos"}
+```{r message=FALSE, warning=FALSE, tidy=TRUE,fig.width=12, fig.height=6,fig.cap="Número acumulado de confirmados por COVID-19, observados y predichos"}
 p1<-p1+labs(caption = "Juan Pablo Díaz @juandiazmart / Data: https://github.com/mariorz.",
         subtitle = paste("Datos hasta", format(max(data_covid$date), "%b %e, %Y"))) + 
    theme(plot.title = element_text(face = "bold"),
@@ -594,12 +599,12 @@ ggplotly(p1) %>%
  list(x = 1, y =0, text ="Juan Pablo Díaz @juandiazmart / Data: Repo John H.", 
       showarrow = F, xref='paper', yref='paper', 
       xanchor='right', yanchor='auto', xshift=0, yshift=0,
-      font=list(size=7))
+      font=list(size=7)),legend = list(orientation = 'h')
  )
 ```
 
 
-```{r message=FALSE, warning=FALSE, tidy=TRUE,fig.width=10, fig.height=8,fig.cap=paste("Efecto de las intervenciones en",expression(R[t]))}
+```{r message=FALSE, warning=FALSE, tidy=TRUE,fig.width=10,preview=TRUE, fig.height=8,fig.width=12,fig.cap=paste("Efecto de las intervenciones en",expression(R[t]))}
 p3+labs(caption = "Juan Pablo Díaz @juandiazmart / Data: https://github.com/mariorz.",
         subtitle = paste("Datos hasta", format(max(data_covid$date), "%b %e, %Y"))) + 
    theme(plot.title = element_text(size = rel(2), face = "bold"),
@@ -617,7 +622,7 @@ p3+labs(caption = "Juan Pablo Díaz @juandiazmart / Data: https://github.com/mar
 Una de las ventajas de este modelo es que nos permite hacer predicciones del número acumulado de muertes, utilizando $R_t$ estimado en `r format(max(data_covid$date), "%b %e")` y su contrafactual^[Lo que pudo haber ocurrido] ($R_t$ al inicio de la epidemia en nuestro país);estas predicciones se muestran en la Figura XX. Con estos resultados es posible estimar cuantas muertes se han evitado hasta el día de hoy, lo anterior se obtiene al calcular la diferencia entre ambas predicciones (region azul menos región roja de la Fiugra XX en`r format(max(data_covid$date), "%b %e")`). Gracias a las medidas de mitigación se han podido evitar 
  `r formatC(muertes_evitadas[1], format="f", big.mark=",", digits=0)` (95% CrI: `r paste(formatC(muertes_evitadas[2], format="f", big.mark=",", digits=0),"-",formatC(muertes_evitadas[3], format="f", big.mark=",", digits=0))`) muertes.
 
-```{r message=FALSE, warning=FALSE, tidy=TRUE,fig.width=10, fig.height=8,fig.cap= "Número acumulado de muertes por COVID-19, observados y predichos"}
+```{r message=FALSE, warning=FALSE, tidy=TRUE,fig.width=12, fig.height=6,fig.cap= "Número acumulado de muertes por COVID-19, observados y predichos"}
 p2<-p2+labs(caption = "Juan Pablo Díaz @juandiazmart / Data: https://github.com/mariorz.",
         subtitle = paste("Datos hasta", format(max(data_covid$date), "%b %e, %Y"))) + 
   theme(plot.title = element_text(face = "bold"),
