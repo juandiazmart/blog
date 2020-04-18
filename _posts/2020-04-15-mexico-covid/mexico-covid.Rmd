@@ -640,4 +640,6 @@ ggplotly(p2) %>%
 
 # Discusión y conclusiones
 
+Los modelos de predicción históricamente han servido para poder la toma de decisiones en distintas partes del mundo dado que éstos ayudan a tener un mejor entendimiento de lo que actualmente sucede y lo que podría suceder. Hemos visto hasta ahora que las diferentes mdedidas que ha tomado el gobierno han servido para reducir la transmisión y por lo tanto se han podido evitar un número importante de muertes debido a COVID-19. El número de repdroducción
+
 
