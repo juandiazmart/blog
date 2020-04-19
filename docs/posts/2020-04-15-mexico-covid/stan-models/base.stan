@@ -17,9 +17,9 @@ data {
   real SI[N2]; // fixed pre-calculated SI using emprical data from Neil
 }
 
-transformed data {
-  real delta = 1e-5;
-}
+// transformed data {
+//   real delta = 1e-5;
+// }
 
 parameters {
   real<lower=0> mu[M]; // intercept for Rt

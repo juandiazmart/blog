@@ -6,14 +6,14 @@
     <atom:link href="https://juandiazmart.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
     <description>Este blog contiene diferentes aplicaciones estadísticas en salud.</description>
     <generator>Distill</generator>
-    <lastBuildDate>Thu, 16 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 19 Apr 2020 00:00:00 +0000</lastBuildDate>
     <item>
       <title>Ociosidad en tiempos de COVID-19 (2019-nCoV)</title>
       <dc:creator>Juan Pablo Díaz-Martínez</dc:creator>
       <link>https://juandiazmart.github.io/blog/posts/2020-04-15-mexico-covid</link>
       <description>Algunos comentarios de lo que pasa en México con respecto a esta enfermedad.</description>
       <guid>https://juandiazmart.github.io/blog/posts/2020-04-15-mexico-covid</guid>
-      <pubDate>Thu, 16 Apr 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 19 Apr 2020 00:00:00 +0000</pubDate>
       <media:content url="https://juandiazmart.github.io/blog/posts/2020-04-15-mexico-covid/mexico-covid_files/figure-html5/repro-1.png" medium="image" type="image/png" width="2304" height="1536"/>
     </item>
   </channel>
