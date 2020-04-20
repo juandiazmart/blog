@@ -1,11 +1,12 @@
 ---
-title: "Ociosidad en tiempos de COVID-19 (2019-nCoV)"
+title: "Estimación del impacto de las medidas de mitigación por COVID-19 utilizando un modelo jerárquico Bayesiano"
 author:
 - affiliation: UHN, Toronto, ON, Canada
   affiliation_url: https://thebru.ca/Juan_Pablo_Diaz_Martinez
   name: Juan Pablo Díaz-Martínez
 date: "`r Sys.Date()`"
 base_url: https://juandiazmart.github.io/blog/
+preview: dag_COVID.png
 description: Algunos comentarios de lo que pasa en México con respecto a esta enfermedad.
 slug: COVID19Mexico
 creative_commons: CC BY-SA
@@ -44,7 +45,7 @@ library(bayesplot)
 library(cowplot)
 library(plotly)
 
-source('Mexico_muerte.R', encoding = 'UTF-8')
+#source('Mexico_muerte.R', encoding = 'UTF-8')
 
 percent <- function(x, digits = 2, format = "f", ...) {
   paste0(formatC(100 * x, format = format, digits = digits, ...), "%")
@@ -521,8 +522,8 @@ Estas limitaciones no afectarán ningún modelo o inferencia que se quiera reali
 
 ¿De qué manera se puede estimar el número de infectados y el impacto de las medidas realizadas por el gobierno federal para incentivar el distanciamiento social? Utilizando la historia natural de la enfermedad. El Imperial College de Reino Unido publicó el 30 de marzo un modelo [modelo de predicción](https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/covid-19/report-13-europe-npi-impact/) de muertes, infectados y efectos de diferentes medidas para "aplanar la curva". Con el fin de tener una mejor imagen de lo que pasa con COVID-19, el anterior modelo fue adaptado utilizando los datos oficiales reportados en nuestro país. La Figura \@ref(fig:modelo) muestra el modelo de predicción.
 
-```{r modelo, echo=FALSE, fig.cap="Modelo de predicción. Se puede observar la relación entre los diferentes parámetros en el modelo.",fig.align="center"}
-knitr::include_graphics("model.png")
+```{r modelo, echo=FALSE, fig.cap="Representación del modelo utilizando grafos causales acíclicos. Se puede observar la relación entre los diferentes parámetros en el modelo.",fig.align="center"}
+knitr::include_graphics("dag_COVID.png")
 ```
 
 El modelo utiliza las muertes observadas de acuerdo a los datos oficiales del gobierno de México.La Figura \@ref(fig:modelo) muestra el nivel jerárquico (de abajo hacia arriba) que nos permite relacionar el impacto de diferentes intervenciones (i.e. cierre de escuelas,etc.) y las muertes observadas. Dada la relación que existe entre los diferentes parámetros a estimar, el modelo realiza la inferencia utilizando un enfoque Bayesiano mediante `stan`, un lenguaje de programación específico para inferencia Bayesiana. La relación entre los parámetros se explica a grandes rasgos a continuación utilizando la misma notación que el modelo original.
@@ -603,7 +604,7 @@ ggplotly(p1) %>%
 ```
 
 
-```{r repro,message=FALSE, warning=FALSE, tidy=TRUE,fig.width=10,preview=TRUE, fig.height=8,fig.width=12,fig.cap=paste("Efecto de las intervenciones en","~ R[t]")}
+```{r repro,message=FALSE, warning=FALSE, tidy=TRUE,fig.width=10, fig.height=8,fig.width=12,fig.cap=paste("Efecto de las intervenciones en","~ R[t]")}
 p3+labs(caption = "Juan Pablo Díaz @juandiazmart / Data: https://github.com/mariorz.",
         subtitle = paste("Datos hasta", format(max(data_covid$date), "%b %e, %Y"))) + 
    theme(plot.title = element_text(size = rel(2), face = "bold"),
@@ -641,5 +642,4 @@ ggplotly(p2) %>%
 # Discusión y conclusiones
 
 Los modelos de predicción históricamente han servido para poder la toma de decisiones en distintas partes del mundo dado que éstos ayudan a tener un mejor entendimiento de lo que actualmente sucede y lo que podría suceder. Hemos visto hasta ahora que las diferentes mdedidas que ha tomado el gobierno han servido para reducir la transmisión y por lo tanto se han podido evitar un número importante de muertes debido a COVID-19. El número de repdroducción
-
 

@@ -1,7 +1,7 @@
 [
   {
     "path": "posts/2020-04-15-mexico-covid/",
-    "title": "Ociosidad en tiempos de COVID-19 (2019-nCoV)",
+    "title": "Estimación del impacto de las medidas de mitigación por COVID-19 utilizando un modelo jerárquico Bayesiano",
     "description": "Algunos comentarios de lo que pasa en México con respecto a esta enfermedad.",
     "author": [
       {
@@ -9,14 +9,14 @@
         "url": {}
       }
     ],
-    "date": "2020-04-19",
+    "date": "2020-04-20",
     "categories": [
       "R",
       "COVID-19"
     ],
-    "preview": "posts/2020-04-15-mexico-covid/mexico-covid_files/figure-html5/repro-1.png",
-    "last_modified": "2020-04-19T15:27:53-04:00",
-    "preview_width": 2304,
-    "preview_height": 1536
+    "preview": "posts/2020-04-15-mexico-covid/dag_COVID.png",
+    "last_modified": "2020-04-20T13:38:30-04:00",
+    "preview_width": 437,
+    "preview_height": 744
   }
 ]
