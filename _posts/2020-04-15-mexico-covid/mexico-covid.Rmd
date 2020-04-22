@@ -369,6 +369,8 @@ un_dates <- unique(covariates_country_long$value)
   muertes_pred<-as.numeric(data_country_forecast %>% filter(time==Sys.Date()) %>% select(estimated_deaths_forecast,death_min_forecast,death_max_forecast))
   muertes_evitadas<-muertes_cf-muertes_pred
   
+  save(confirmados,muertes,data_covid,file = "C:/Users/juand/OneDrive/Documents/JPD/grant_template/grant.R")
+  
   
 ```
 # Resumen ejecutivo
