@@ -245,7 +245,7 @@ un_dates <- unique(covariates_country_long$value)
                 aes(x = time, ymin = cases_min, ymax = cases_max, fill = "95% CrI")) +
     geom_line(aes(x=time,y=predicted_cases_c,color="Predicción"))+
     xlab("") +
-    ylab("Número acumulado de casos confirmados") +
+    ylab("Número acumulado de infectados con SARS-Cov-2") +
     scale_y_continuous(labels = scales::comma_format(accuracy = 1),n.breaks = 10)+
     scale_x_date(date_breaks = "3 days", labels = date_format("%e %b")) + 
     scale_fill_manual(name = "", labels = c("Observados","95% CrI"),
