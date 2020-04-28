@@ -6,14 +6,14 @@
     <atom:link href="https://juandiazmart.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
     <description>Este blog contiene diferentes aplicaciones estadísticas en salud.</description>
     <generator>Distill</generator>
-    <lastBuildDate>Wed, 22 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 27 Apr 2020 00:00:00 +0000</lastBuildDate>
     <item>
       <title>Estimación del impacto de las medidas de mitigación por COVID-19 utilizando un modelo jerárquico Bayesiano</title>
       <dc:creator>Juan Pablo Díaz-Martínez</dc:creator>
       <link>https://juandiazmart.github.io/blog/posts/2020-04-15-mexico-covid</link>
       <description>Algunos comentarios de lo que pasa en México con respecto a esta enfermedad.</description>
       <guid>https://juandiazmart.github.io/blog/posts/2020-04-15-mexico-covid</guid>
-      <pubDate>Wed, 22 Apr 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 27 Apr 2020 00:00:00 +0000</pubDate>
       <media:content url="https://juandiazmart.github.io/blog/posts/2020-04-15-mexico-covid/dag_COVID.png" medium="image" type="image/png" width="437" height="744"/>
     </item>
   </channel>

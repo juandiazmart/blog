@@ -45,7 +45,8 @@ library(bayesplot)
 library(cowplot)
 library(plotly)
 
-#source('Mexico_muerte.R', encoding = 'UTF-8')
+source('Mexico_muerte.R', encoding = 'UTF-8')
+grant<-T
 
 percent <- function(x, digits = 2, format = "f", ...) {
   paste0(formatC(100 * x, format = format, digits = digits, ...), "%")
@@ -153,7 +154,7 @@ rt_ui2 <- colQuantiles(out$Rt[,1:N,1],probs=.75)
     
 covariates_country <- covariates[which(covariates$ï..Country == country), 2:8]   
     
-covariates_country$lockdown = NULL
+covariates_country$self_isolating_if_ill = NULL
 covariates_country$sport = NULL 
 covariates_country$travel_restrictions = NULL 
 covariates_country_long <- gather(covariates_country[], key = "key", 
@@ -206,6 +207,11 @@ un_dates <- unique(covariates_country_long$value)
                                "rt_max" = rt_ui,
                                "rt_min2" = rt_li2,
                                "rt_max2" = rt_ui2)
+  
+    
+
+
+ 
   data_cases_95 <- data.frame(data_country$time, data_country$predicted_min_c, 
                               data_country$predicted_max_c)
   names(data_cases_95) <- c("time", "cases_min", "cases_max")
@@ -216,6 +222,18 @@ un_dates <- unique(covariates_country_long$value)
   data_cases_50$key <- rep("fifty", length(data_cases_50$time))
   data_cases <- rbind(data_cases_95, data_cases_50)
   levels(data_cases$key) <- c("ninetyfive", "fifty")
+  
+    data_cases_95_i <- data.frame(data_country$time, data_country$predicted_min, 
+                              data_country$predicted_max)
+  names(data_cases_95_i) <- c("time", "cases_min", "cases_max")
+  data_cases_95_i$key <- rep("nintyfive", length(data_cases_95_i$time))
+  data_cases_50_i <- data.frame(data_country$time, data_country$predicted_min2, 
+                              data_country$predicted_max2)
+  names(data_cases_50_i) <- c("time", "cases_min", "cases_max")
+  data_cases_50_i$key <- rep("fifty", length(data_cases_50_i$time))
+  data_cases_i <- rbind(data_cases_95_i, data_cases_50_i)
+  levels(data_cases_i$key) <- c("ninetyfive", "fifty") 
+
   
   p1 <- ggplot(data_country) +
     geom_bar(data = data_country, aes(x = time, y = reported_cases_c,fill = "Observados"), 
@@ -229,6 +247,34 @@ un_dates <- unique(covariates_country_long$value)
     scale_x_date(date_breaks = "3 days", labels = date_format("%e %b")) + 
     scale_fill_manual(name = "", labels = c("Observados","95% CrI"),
                       values = c(alpha("deepskyblue4", 0.35),alpha("coral4", 0.5))) + 
+    scale_color_manual(name = "",
+                      values ="black") + 
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),legend.position="bottom") + 
+    guides(fill=guide_legend(ncol=1))
+  
+  data_deaths_95 <- data.frame(data_country$time, data_country$death_min_c, 
+                               data_country$death_max_c)
+  names(data_deaths_95) <- c("time", "death_min", "death_max")
+  data_deaths_95$key <- rep("nintyfive", length(data_deaths_95$time))
+  data_deaths_50 <- data.frame(data_country$time, data_country$death_min_c2, 
+                               data_country$death_max_c2)
+  names(data_deaths_50) <- c("time", "death_min", "death_max")
+  data_deaths_50$key <- rep("fifty", length(data_deaths_50$time))
+  data_deaths <- rbind(data_deaths_95, data_deaths_50)
+  levels(data_deaths$key) <- c("ninetyfive", "fifty")
+  
+  p4 <- ggplot(data_country) +
+    geom_bar(data = data_country, aes(x = time, y = reported_cases,fill = "Observados"), 
+            stat='identity', alpha=0.5) + 
+    geom_ribbon(data = data_cases_95_i, 
+                aes(x = time, ymin = cases_min, ymax = cases_max, fill = "95% CrI")) +
+    geom_line(aes(x=time,y=predicted_cases,color="Mediana"))+
+    xlab("") +
+    ylab("Nuevos casos de infección, estimados y confirmados") +
+    scale_y_continuous(labels = scales::comma_format(accuracy = 1),n.breaks = 10)+
+    scale_x_date(date_breaks = "3 days", labels = date_format("%e %b")) + 
+    scale_fill_manual(name = "", labels = c("95% CrI","Observados"),
+                      values = c(alpha("deepskyblue4", 0.35),alpha("coral3", 0.5))) + 
     scale_color_manual(name = "",
                       values ="black") + 
     theme(axis.text.x = element_text(angle = 45, hjust = 1),legend.position="bottom") + 
@@ -279,7 +325,7 @@ un_dates <- unique(covariates_country_long$value)
   
   p2 <- ggplot(data_country) +
     geom_bar(data = data_country, aes(x = time, y = deaths_c), 
-             fill = "coral4", stat='identity', alpha=0.5) + 
+             fill = "coral3", stat='identity', alpha=0.5) + 
     geom_line(data = data_country, aes(x = time, y = estimated_deaths_c), 
               col = "deepskyblue4") + 
     geom_line(data = data_country_forecast, 
@@ -315,9 +361,7 @@ un_dates <- unique(covariates_country_long$value)
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
     guides(fill=guide_legend(ncol=1, reverse = TRUE))
   
-    plot_labels <- c("Cancelación de eventos",
-                   "Cierre de escuelas",
-                   "Aislamiento después de presentar síntomas",
+    plot_labels <- c("Extensión del distanciamento social","Cancelación de eventos","Cierre de escuelas",
                    "Distanciamiento Social")
   
   # Plotting interventions
@@ -337,7 +381,7 @@ un_dates <- unique(covariates_country_long$value)
                                         group = key,
                                         fill = key)) +
     geom_hline(yintercept = 1, color = 'black', size = 0.1) + 
-    geom_step(aes(x=time,y=rt,linetype="Predicción"))+
+    geom_step(aes(x=time,y=rt,linetype="Mediana"))+
     scale_linetype_manual(name = "",
                        values ="solid")+
     geom_segment(data = covariates_country_long,
@@ -350,7 +394,7 @@ un_dates <- unique(covariates_country_long$value)
                                                    col = key), size = 4) +
     xlab("") +
     scale_y_continuous(n.breaks = 10)+
-    ylab("Número efectivo de reproducción") +
+    ylab(bquote(R[t])) +
     scale_fill_manual(name = "", labels = c("95% CrI"),
                       values = c(alpha("deepskyblue4", 0.35))) + 
     scale_shape_manual(name = "Intervenciones", labels = plot_labels,
@@ -369,7 +413,7 @@ un_dates <- unique(covariates_country_long$value)
   muertes_pred<-as.numeric(data_country_forecast %>% filter(time==Sys.Date()) %>% select(estimated_deaths_forecast,death_min_forecast,death_max_forecast))
   muertes_evitadas<-muertes_cf-muertes_pred
   
-  save(confirmados,muertes,data_covid,file = "C:/Users/juand/OneDrive/Documents/JPD/grant_template/grant.R")
+  save(confirmados,muertes,data_covid,p4,p2,p3,data_country,pop,muertes_evitadas,file = "C:/Users/juand/OneDrive/Documents/JPD/grant_template/grant.R")
   
   
 ```
