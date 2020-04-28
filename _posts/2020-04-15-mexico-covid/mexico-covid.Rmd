@@ -8,6 +8,8 @@ date: "`r Sys.Date()`"
 base_url: https://juandiazmart.github.io/blog/
 preview: dag_COVID.png
 description: Algunos comentarios de lo que pasa en México con respecto a esta enfermedad.
+twitter:
+  creator: "@juandiazmart"
 slug: COVID19Mexico
 creative_commons: CC BY-SA
 categories:
@@ -18,6 +20,7 @@ output:
     self_contained: no
     toc: yes
     toc_depth: 3
+repository_url: https://github.com/juandiazmart/blog/tree/master/_posts/2020-04-15-mexico-covid
 ---
 
 ```{r setup, include=FALSE}
