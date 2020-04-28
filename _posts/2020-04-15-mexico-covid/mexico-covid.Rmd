@@ -429,7 +429,7 @@ Debido a la importancia de lo anterior, decidí escribir este post con los sigui
 
 Los resultados son los siguientes: el `r percent(tail(data_country[,"predicted_cases_c"],1)/pop)` (95% CrI: `r paste(percent(tail(data_country[,"predicted_min_c"],1)/pop),"-",percent(tail(data_country[,"predicted_max_c"],1)/pop))`) de la población en nuestro país se encuentra infectada con SARS-COV2 hasta `r format(max(data_covid$date), "%b %e")`. Desde que se exhortó al distanciamiento social mediante la campaña "Susana Distancia", el número de reproducción efectivo esperado fue de `r formatC(tail(data_country[,"rt"],1), format="f", big.mark=",", digits=1)` (95% CrI: `r paste(formatC(tail(data_country[,"rt_min"],1), format="f", big.mark=",", digits=1),"-",formatC(tail(data_country[,"rt_max"],1), format="f", big.mark=",", digits=1))`), lo que implica que una persona infecta a `r formatC(tail(data_country[,"rt"],1), format="f", big.mark=",", digits=1)` personas. 
 
-De acuerdo a los resultados, el número acumulado de muertes seguirá incrementando en los próximos 7 días. Si bien se observó que "Susana Distancia" ha logrado reducir el número de muertes, estas medida de mitigación no ha logrado disminuir lo suficiente el número efectivo de reproducción^[Lo ideal es que éste se encuentre debajo de uno]. Estas estimaciones son de gran utilidad ya que podrán servir para poder realizar estimaciones del uso de recursos por tratar COVID-19, especialmente sería de gran interés poder conocer si el número de ventiladores serán suficientes en los siguientes meses.
+De acuerdo a los resultados, el número acumulado de muertes seguirá incrementando en los próximos 7 días. Si bien se observó que extender "Susana Distancia" ha logrado reducir el número de muertes, estas medida de mitigación no ha logrado disminuir lo suficiente el número efectivo de reproducción^[Lo ideal es que éste se encuentre debajo de uno]. Estas estimaciones son de gran utilidad ya que podrán servir para poder realizar estimaciones del uso de recursos por tratar COVID-19, especialmente sería de gran interés poder conocer si el número de ventiladores serán suficientes en los siguientes meses.
 
 # Introducción
 
@@ -510,7 +510,10 @@ Antes de presentar datos y gráficas me gustaría enfatizar en **2 aspectos impo
    annotate("text", label = "Casos incrementan \n al doble cada 3 días", x = 21, y = 32000,size=3)
 ```
 
-Veamos ahora la comparación entre los diferentes países en el número de muertes^[Recordemos que a todos los graves sí se les realiza la prueba]. La siguiente gráfica nos ayuda a entender el comportamiento de número de muertes acumuladas en nuestro país desde que se presentó la quinta defunción.
+Muchos de los modelos epidemiológicos se basan en la incidencia de **casos confirmados** para poder hacer estimaciones y/o proyecciones de diferentes desenlaces en salud, ya sea mortalidad, hospitalizaciones, intubaciones, etc. Una de las grandes limitaciones es el tiempo que pasa entre el momento de la infección y el momento que la prueba resulta positiva. Esto se debe a que entre estos dos momentos hay un periodo de incubación (mediana 6 días [@lauer2020incubation]) y un periodo entre que se toma la prueba y se entrega el resultado de ésta (mediana 9 días [@gob]). Una consecuencia de esto es que los casos confirmados que se presentan día a día son en realidad los casos que se infectaron hace 2 semanas o más.
+Adicionalmente, el sistema de vigilancia centinela no realiza pruebas a aquellos que no cumplen la definición operacional, implicando que este sistema no logra capturar a todas las personas asintomáticas. Esto pudiera generar diferentes brotes ya que existe evidencia científica relacionada a la transmisión del virus por parte de los que no presentan ningún tipo de síntoma [@Bai]. Debido a estas limitaciones, diferentes investigadores en enfermedades infecciosas han utilizado las muertes observadas como la variable principal para hacer inferencia en diferentes modelos epidemiológicos ([@flaxman2020report]). El razonamiento de este abordaje es que en teoría sí podemos observar las todas las muertes, al menos todas aquellas que ocurrieron en un hospital.
+
+La siguiente gráfica nos ayuda a entender el comportamiento de número de muertes acumuladas en nuestro país desde que se presentó la quinta defunción.
 
 ```{r acum_muerte, message=FALSE, warning=FALSE, tidy=TRUE,fig.width=12, fig.height=8}
  data_covid %>% filter(iso3c %in% countries) %>% 
@@ -551,7 +554,6 @@ Veamos ahora la comparación entre los diferentes países en el número de muert
    annotate("text", label = "Muertes incrementan \n al doble cada 3 días", x = 15, y = 64,size=3)
 ```
 
-Hay que tener en cuenta que muchas de las muertes no serán diagnosticadas como muertes por COVID-19 (eso pasa en México y en otros países), por eso mientras el aumento sea constante no habría de preocuparse por esta sub-estimación en el sentido de que pueda sesgar la rapidez con la que aumentan las muertes.
 
 ## Estimación del número de infectados y del impacto de Susana Distancia.
 
@@ -688,7 +690,7 @@ Una de las ventajas de este modelo es que nos permite hacer predicciones del nú
  `r formatC(muertes_evitadas[1], format="f", big.mark=",", digits=0)` (95% CrI: `r paste(formatC(muertes_evitadas[2], format="f", big.mark=",", digits=0),"-",formatC(muertes_evitadas[3], format="f", big.mark=",", digits=0))`) muertes.
 
 ```{r muerte,message=FALSE, warning=FALSE, tidy=TRUE,fig.width=12, fig.height=8,fig.cap= "Número acumulado de muertes por COVID-19, observados y predichos"}
-p2+labs(title = "Numero acumulado de muertes confirmadas con SARS-Cov-2",
+p2+labs(title = "Numero acumulado de muertes positivas a SARS-Cov-2",
   caption = "Juan Pablo Díaz @juandiazmart / Datos: Informe diario S. Salud (https://github.com/mariorz).",
         subtitle = paste("Datos hasta", format(max(data_covid$date), "%b %e, %Y"),"México"))+ 
   theme(plot.title = element_text(size = rel(2), face = "bold"),
