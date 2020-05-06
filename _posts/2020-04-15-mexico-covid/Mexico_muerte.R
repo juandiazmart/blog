@@ -49,7 +49,7 @@ covariates<-rename(covariates,Country=ï..Country)
 p <- ncol(covariates) - 1
 forecast = 0
 
-N2 = 70 # Increase this for a further forecast
+N2 = 90 # Increase this for a further forecast
 
 dates = list()
 reported_cases = list()
